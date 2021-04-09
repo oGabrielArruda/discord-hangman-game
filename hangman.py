@@ -1,12 +1,12 @@
 import random
-from palavras import *
+from challenges import *
 
 
-class Forca:
+class Hangman:
 	def __init__(self):
-		self.__word_object = random.choice(palavras)
+		self.__challenge_object = random.choice(challenges)
 		
-		length = len(self.word_object["palavra"])
+		length = len(self.word_object["word"])
 		self.__answer = "- " * length
 
 
@@ -20,9 +20,9 @@ class Forca:
 	
 	@property
 	def word_object(self):
-		return self.__word_object
+		return self.__challenge_object
 
 	@word_object.setter
 	def word_object(self, state):
-		self.__word_object["palavra"] = state["palavra"]
-		self.__word_object["dica"] = state["dica"]
+		self.__challenge_object["word"] = state["word"]
+		self.__challenge_object = state["clue"]
