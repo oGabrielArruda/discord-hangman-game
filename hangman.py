@@ -14,6 +14,32 @@ class Hangman:
 		
 		self.__errors_left = int(word_length * 0.3)
 
+		self.__letters_tried = []
+
+	def try_letter(self, letter):	
+		# verifies if the letter was already tried
+		if letter in self.__letters_tried:
+			return False
+
+		self.__letters_tried.append(letter)
+
+		# verifies if the char exists in the word. If not, just stop the function.
+		if self.__challenge_object["word"].count(letter) == 0:
+			self.__errors_left = self.__errors_left - 1
+			return False
+
+		# verifies the position of the ocurrency, and changes the answer text.
+		list_answer = list(self.__answer)
+		index = 0
+		for char in self.__challenge_object["word"]:
+			if char == letter:
+				self.__letters_left = self.__letters_left - 1
+				list_answer[index] = letter
+			index = index + 2
+
+		self.__answer = "".join(list_answer)
+	
+		return True
 
 	@property
 	def answer(self):
@@ -47,3 +73,7 @@ class Hangman:
 	@errors_left.setter
 	def errors(self, state):
 		self.__errors_left = state
+
+	@property
+	def letters_tried(self):
+		return self.__letters_tried

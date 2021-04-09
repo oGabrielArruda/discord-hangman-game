@@ -41,7 +41,38 @@ async def letter_attempt(ctx, letter : str):
 	if not games_on.__contains__(player_id):
 		await ctx.send("The game isn't started yet! Type !start to begin.")
 
-	print(letter)
+	hangman = games_on[player_id]["game"]
 
+	if letter in hangman.letters_tried:
+		await print_game(ctx, games_on[player_id], "You already tried this letter!")
+		return
+
+	is_correct = hangman.try_letter(letter)
+	
+	if not is_correct:
+		if hangman.errors_left == 0:
+			await print_game(ctx, games_on[player_id], 
+							f"You lost the game :(\nThe word was {hangman.__challenge_object['word']}")						
+			del games_on[player_id]
+		else:
+			await print_game(ctx, games_on[player_id], "You missed!")
+	
+	if is_correct:
+		if hangman.letters_left == 0:
+			await print_game(ctx, games_on[player_id], "Congrats!!! You won the game!")
+			del games_on[player_id]
+		else:
+			await print_game(ctx, games_on[player_id], "Oh yea! you got it")
+
+async def print_game(ctx, game_on_object, text):
+	player_mention = game_on_object["mention"]
+	hangman = game_on_object["game"]
+
+	await ctx.send(
+				  f"{player_mention} {text}\n\n" +	
+				  f"\nThe word currently formed is {hangman.answer}" + 
+				  f"\nThere is {hangman.letters_left} letters left!" +
+				  f"\nErrors left: {hangman.errors_left}"
+				  f"\nLetters tried: {hangman.letters_tried}")
 
 bot.run(TOKEN)

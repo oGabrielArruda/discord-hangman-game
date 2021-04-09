@@ -1,22 +1,22 @@
 challenges = [
     {
-        "word": "Banana",
+        "word": "banana",
         "clue":"Fruta"
     },
     {
-        "word": "Macaco",
+        "word": "macaco",
         "clue":"Animal"
     },
     {
-        "word": "Carro",
+        "word": "carro",
         "clue":"Automóvel"
     },
     {
-        "word": "Hospital",
+        "word": "hospital",
         "clue":"Local"
     },
     {
-        "word": "Dinamarca",
+        "word": "dinamarca",
         "clue":"País"
     },
 ]
