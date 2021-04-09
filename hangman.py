@@ -12,7 +12,7 @@ class Hangman:
 
 		self.__letters_left = word_length
 		
-		self.__errors_left = int(word_length * 0.3)
+		self.__errors_left = round(word_length * 0.3)
 
 		self.__letters_tried = []
 

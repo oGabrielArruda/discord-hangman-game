@@ -33,7 +33,7 @@ async def clue(ctx):
 		await ctx.send("The game isn't started yet! Type !start to begin.")
 	
 	clue = games_on[player_id]["game"].challenge_object["clue"]
-	await ctx.send(f"The clue is: '{clue}'")
+	await ctx.send(f"```fix\nThe clue is: '{clue}' ```")
 
 @bot.command(name='letter', help="Attempt of letter")
 async def letter_attempt(ctx, letter : str):
@@ -52,27 +52,27 @@ async def letter_attempt(ctx, letter : str):
 	if not is_correct:
 		if hangman.errors_left == 0:
 			await print_game(ctx, games_on[player_id], 
-							f"You lost the game :(\nThe word was {hangman.challenge_object['word']}")						
+							f"You lost the game :sob:\nThe word was ||{hangman.challenge_object['word']}||")						
 			del games_on[player_id]
 		else:
-			await print_game(ctx, games_on[player_id], "You missed!")
+			await print_game(ctx, games_on[player_id], "You missed! :x:")
 	
 	if is_correct:
 		if hangman.letters_left == 0:
-			await print_game(ctx, games_on[player_id], "Congrats!!! You won the game!")
+			await print_game(ctx, games_on[player_id], "Congrats!!! You won the game! :partying_face:")
 			del games_on[player_id]
 		else:
-			await print_game(ctx, games_on[player_id], "Oh yea! you got it")
+			await print_game(ctx, games_on[player_id], "You got it! :white_check_mark:")
 
 async def print_game(ctx, game_on_object, text):
 	player_mention = game_on_object["mention"]
 	hangman = game_on_object["game"]
 
 	await ctx.send(
-				  f"{player_mention} {text}\n\n" +	
-				  f"\nThe word currently formed is {hangman.answer}" + 
-				  f"\nThere is {hangman.letters_left} letters left!" +
-				  f"\nErrors left: {hangman.errors_left}"
-				  f"\nLetters tried: {hangman.letters_tried}")
+				  f"{player_mention} {text}\n" +	
+				  f"\n```yaml\n{hangman.answer}```" + 
+				  f"\n```md\n# There is {hangman.letters_left} letters left!" +
+				  f"\n# Errors left: {hangman.errors_left} \n```"
+				  f"\n```diff\n- Letters tried: {hangman.letters_tried} ```")
 
 bot.run(TOKEN)
