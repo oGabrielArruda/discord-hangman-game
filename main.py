@@ -52,7 +52,7 @@ async def letter_attempt(ctx, letter : str):
 	if not is_correct:
 		if hangman.errors_left == 0:
 			await print_game(ctx, games_on[player_id], 
-							f"You lost the game :(\nThe word was {hangman.__challenge_object['word']}")						
+							f"You lost the game :(\nThe word was {hangman.challenge_object['word']}")						
 			del games_on[player_id]
 		else:
 			await print_game(ctx, games_on[player_id], "You missed!")
