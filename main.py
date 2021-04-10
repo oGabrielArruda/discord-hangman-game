@@ -1,3 +1,5 @@
+# Author: Gabriel Alves de Arruda
+
 import os
 import random
 import notificator

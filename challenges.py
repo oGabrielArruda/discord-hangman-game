@@ -19,6 +19,18 @@ challenges = [
         "word": "brazil",
         "clue":"Country"
     },
+    {
+        "word": "soccer",
+        "clue":"Sport"
+    },
+    {
+        "word": "neymar",
+        "clue":"Soccer Player"
+    },
+    {
+        "word": "python",
+        "clue":"Programming language"
+    },
 ]
     
         

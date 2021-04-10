@@ -23,7 +23,7 @@ class Hangman:
 
 		self.__letters_tried.append(letter)
 
-		# verifies if the char exists in the word. If not, just stop the function.
+		# verifies if the char exists in the word. If not, just mark the error and returns False.
 		if self.__challenge_object["word"].count(letter) == 0:
 			self.__errors_left = self.__errors_left - 1
 			return False
@@ -37,6 +37,7 @@ class Hangman:
 				list_answer[index] = letter
 			index = index + 2
 
+		# transform the list in a string, and saves into the property.
 		self.__answer = "".join(list_answer)
 	
 		return True
