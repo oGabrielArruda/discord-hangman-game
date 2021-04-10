@@ -1,23 +1,23 @@
 challenges = [
     {
         "word": "banana",
-        "clue":"Fruta"
+        "clue":"Fruit"
     },
     {
-        "word": "macaco",
+        "word": "monkey",
         "clue":"Animal"
     },
     {
-        "word": "carro",
-        "clue":"Automóvel"
+        "word": "car",
+        "clue":"Vehicle"
     },
     {
         "word": "hospital",
         "clue":"Local"
     },
     {
-        "word": "dinamarca",
-        "clue":"País"
+        "word": "brazil",
+        "clue":"Country"
     },
 ]
     

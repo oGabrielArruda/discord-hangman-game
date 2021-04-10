@@ -1,5 +1,6 @@
 import os
 import random
+import notificator
 from hangman import Hangman
 
 from discord.ext import commands
@@ -16,63 +17,48 @@ games_on = {}
 
 @bot.command(name='start', help="Starts the game")
 async def start_game(ctx):
-	player_id = ctx.__dict__['message'].author.id
-	player_mention = ctx.__dict__['message'].author.mention
-
-	game = Hangman()
-	games_on[player_id] = { "mention": player_mention, "game": game }
-
-	await ctx.send(f'{player_mention} the game has started!\n')
-	
-	await ctx.send(game.answer + f"\nThere is {game.letters_left} letters left!")
+	player_id, player_mention = ctx.__dict__['message'].author.id, ctx.__dict__['message'].author.mention
+	games_on[player_id] = { "mention": player_mention, "game": Hangman() }
+	await notificator.start(ctx, games_on[player_id])
 
 @bot.command(name='clue', help="Attempt of letter")
 async def clue(ctx):
 	player_id = ctx.__dict__['message'].author.id
+
 	if not games_on.__contains__(player_id):
-		await ctx.send("The game isn't started yet! Type !start to begin.")
+		await notificator.game_not_started(ctx)
+		return
 	
 	clue = games_on[player_id]["game"].challenge_object["clue"]
-	await ctx.send(f"```fix\nThe clue is: '{clue}' ```")
+	await notificator.clue(ctx, clue)
 
 @bot.command(name='letter', help="Attempt of letter")
 async def letter_attempt(ctx, letter : str):
 	player_id = ctx.__dict__['message'].author.id
+	
 	if not games_on.__contains__(player_id):
-		await ctx.send("The game isn't started yet! Type !start to begin.")
+		await notificator.game_not_started(ctx)
+		return
 
 	hangman = games_on[player_id]["game"]
 
+	# verify if letter was already tried
 	if letter in hangman.letters_tried:
-		await print_game(ctx, games_on[player_id], "You already tried this letter!")
+		await notificator.repeated_letter(ctx, games_on[player_id])
 		return
 
-	is_correct = hangman.try_letter(letter)
-	
-	if not is_correct:
-		if hangman.errors_left == 0:
-			await print_game(ctx, games_on[player_id], 
-							f"You lost the game :sob:\nThe word was ||{hangman.challenge_object['word']}||")						
-			del games_on[player_id]
-		else:
-			await print_game(ctx, games_on[player_id], "You missed! :x:")
-	
-	if is_correct:
+	# verify if the letter exists in the word	
+	if hangman.try_letter(letter):
 		if hangman.letters_left == 0:
-			await print_game(ctx, games_on[player_id], "Congrats!!! You won the game! :partying_face:")
+			await notificator.game_won(ctx, games_on[player_id])
 			del games_on[player_id]
 		else:
-			await print_game(ctx, games_on[player_id], "You got it! :white_check_mark:")
-
-async def print_game(ctx, game_on_object, text):
-	player_mention = game_on_object["mention"]
-	hangman = game_on_object["game"]
-
-	await ctx.send(
-				  f"{player_mention} {text}\n" +	
-				  f"\n```yaml\n{hangman.answer}```" + 
-				  f"\n```md\n# There is {hangman.letters_left} letters left!" +
-				  f"\n# Errors left: {hangman.errors_left} \n```"
-				  f"\n```diff\n- Letters tried: {hangman.letters_tried} ```")
+			await notificator.correct_letter(ctx, games_on[player_id])
+	else:
+		if hangman.errors_left == 0:
+			await notificator.game_lost(ctx, games_on[player_id])						
+			del games_on[player_id]
+		else:
+			await notificator.missed_letter(ctx, games_on[player_id])
 
 bot.run(TOKEN)
